@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -47,4 +49,24 @@ expect()->extend('toBeOne', function () {
 function something()
 {
     // ..
+}
+
+function createAdmin()
+{
+    $adminTeam = Team::factory()->create(['name' => 'Admin']);
+    $admin = User::factory()->create();
+    $admin->teams()->attach($adminTeam, ['role' => 'admin']);
+    $admin->switchTeam($adminTeam);
+
+    return $admin;
+}
+
+function createManager()
+{
+    $managerTeam = Team::factory()->create(['name' => 'Manager']);
+    $manager = User::factory()->manager()->create();
+    $manager->teams()->attach($managerTeam, ['role' => 'editor']);
+    $manager->switchTeam($managerTeam);
+
+    return $manager;
 }

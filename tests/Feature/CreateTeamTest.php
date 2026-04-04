@@ -1,14 +1,17 @@
 <?php
 
 use App\Models\User;
+use Laravel\Jetstream\Features;
 
-test('teams can be created', function () {
+test('teams can not be created', function () {
     $this->actingAs($user = User::factory()->withPersonalTeam()->create());
 
-    $this->post('/teams', [
+    $response = $this->post('/teams', [
         'name' => 'Test Team',
     ]);
 
-    expect($user->fresh()->ownedTeams)->toHaveCount(2);
-    expect($user->fresh()->ownedTeams()->latest('id')->first()->name)->toEqual('Test Team');
-});
+    $response->assertStatus(403);
+    expect($user->fresh()->ownedTeams)->toHaveCount(1);
+})->skip(function () {
+    return ! Features::hasTeamFeatures();
+}, 'Team features are not enabled.');

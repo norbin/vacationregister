@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -33,6 +34,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'vacation_days_yearly',
+        'is_manager',
     ];
 
     /**
@@ -66,6 +69,40 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_manager' => 'boolean',
         ];
+    }
+
+    public function vacationRequests(): HasMany
+    {
+        return $this->hasMany(VacationRequest::class);
+    }
+
+    public function vacationDaysUsed(): int
+    {
+        return $this->vacationRequests()
+            ->where('status', 'approved')
+            ->whereYear('start_date', now()->year)
+            ->sum('total_days');
+    }
+
+    public function vacationDaysRemaining(): int
+    {
+        return $this->vacation_days_yearly - $this->vacationDaysUsed();
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->allTeams()->contains('name', 'Admin');
+    }
+
+    public function isManager(): bool
+    {
+        return $this->allTeams()->contains('name', 'Manager');
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->allTeams()->contains('name', 'Staff');
     }
 }

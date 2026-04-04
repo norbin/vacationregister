@@ -15,6 +15,14 @@ class Team extends JetstreamTeam
     use HasFactory;
 
     /**
+     * @return null
+     */
+    public function resolveCollectionFromAttribute()
+    {
+        return null;
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
