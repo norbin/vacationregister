@@ -113,7 +113,7 @@ function handleImageError() {
 
                             <h4 class="mt-5 text-lg font-semibold text-black dark:text-white">Administrators</h4>
                             <p class="mt-2">
-                                Administrators have full system-level privileges. In addition to being able to submit their own leave requests, administrators can manage and adjust employee vacation entitlements. This includes modifying the number of available leave days per year based on company policy, employment contracts, or special adjustments.
+                                Administrators have limited system-level privileges. In addition to being able to submit their own leave requests, administrators can manage colleagues roles. This includes modifying the number of available leave days per year based on company policy, employment contracts, or special adjustments.
                             </p>
                             <p class="mt-3">Administrators can:</p>
                             <ul class="mt-2 list-disc space-y-1 pl-6">
